@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.AppActivity">
+
+    <ru.netology.nmedia.ui.StatsView
+        android:id="@+id/stats"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center"
+        app:color1="#DC5F00"
+        app:color2="#AF43D9"
+        app:color3="#A4D923"
+        app:color4="#2EC5D9"
+        app:color5="#d7d7d7"
+        app:fontSize="50dp"
+        app:lineWidth="20dp" />
+</FrameLayout>
+

@@ -94,9 +94,10 @@ class StatsView @JvmOverloads constructor(
             it.removeAllListeners()
             it.cancel()
         }
+
         progress = 0F
 
-        valueAnimator = ValueAnimator.ofFloat(0F, 1F).apply {
+        valueAnimator = ValueAnimator.ofFloat(progress, 1F).apply {
             addUpdateListener { anim ->
                 progress = anim.animatedValue as Float
                 invalidate()

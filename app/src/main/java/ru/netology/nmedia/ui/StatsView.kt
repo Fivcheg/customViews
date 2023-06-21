@@ -28,19 +28,16 @@ class StatsView @JvmOverloads constructor(
     private var lineWidth = AndroidUtils.dp(context, 5F).toFloat()
     private var fontSize = AndroidUtils.dp(context, 40F).toFloat()
     private var colors = emptyList<Int>()
-    private var valueAnimator: ValueAnimator? = null
+
     private var progress = 0F
+    private var valueAnimator: ValueAnimator? = null
 
     init {
         context.withStyledAttributes(attrs, R.styleable.StatsView) {
             lineWidth = getDimension(R.styleable.StatsView_lineWidth, lineWidth)
             fontSize = getDimension(R.styleable.StatsView_fontSize, fontSize)
-            colors = listOf(
-                getColor(R.styleable.StatsView_color1, randomColor()),
-                getColor(R.styleable.StatsView_color2, randomColor()),
-                getColor(R.styleable.StatsView_color3, randomColor()),
-                getColor(R.styleable.StatsView_color4, randomColor()),
-            )
+            val resId = getResourceId(R.styleable.StatsView_colors, 0)
+            colors = resources.getIntArray(resId).toList()
         }
     }
 
@@ -50,12 +47,10 @@ class StatsView @JvmOverloads constructor(
         strokeCap = Paint.Cap.ROUND
         strokeJoin = Paint.Join.ROUND
     }
-
-
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
         textAlign = Paint.Align.CENTER
-        textSize = this@StatsView.fontSize
+        textSize = fontSize
     }
 
     var data: List<Float> = emptyList()
@@ -77,20 +72,17 @@ class StatsView @JvmOverloads constructor(
         if (data.isEmpty()) {
             return
         }
-        var startFrom = -90F * progress
-        data.forEachIndexed { index, datum ->
-            var oneSum = (datum * 100 / data.sum())
-            while (oneSum > 1) {
-                oneSum /= 10
-            }
-            val angle = 360F * oneSum
+
+        var startFrom = progress
+        for ((index, datum) in data.withIndex()) {
+            val angle = 360F * datum
             paint.color = colors.getOrNull(index) ?: randomColor()
             canvas.drawArc(oval, startFrom, angle * progress, false, paint)
             startFrom += angle
         }
 
         canvas.drawText(
-            "%.2f%%".format(100.00),
+            "%.2f%%".format(data.sum() * 100),
             center.x,
             center.y + textPaint.textSize / 4,
             textPaint,
@@ -110,6 +102,7 @@ class StatsView @JvmOverloads constructor(
                 invalidate()
             }
             duration = 500
+            rotation = 360F
             interpolator = LinearInterpolator()
         }.also {
             it.start()

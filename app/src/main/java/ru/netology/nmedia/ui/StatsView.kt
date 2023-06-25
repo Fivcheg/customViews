@@ -73,12 +73,14 @@ class StatsView @JvmOverloads constructor(
             return
         }
 
-        var startFrom = progress
+        var startFrom = -90F + 360F * progress
+
         for ((index, datum) in data.withIndex()) {
             val angle = 360F * datum
             paint.color = colors.getOrNull(index) ?: randomColor()
             canvas.drawArc(oval, startFrom, angle * progress, false, paint)
             startFrom += angle
+
         }
 
         canvas.drawText(
